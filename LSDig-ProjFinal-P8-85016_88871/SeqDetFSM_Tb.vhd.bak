@@ -1,0 +1,103 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity SeqDetFSM_Tb is
+end SeqDetFSM_Tb;
+
+architecture Behavioral of SeqDetFSM_Tb is
+
+--maquina estados
+signal s_enter : std_logic;
+signal s_numero_operador : std_logic; -- numero ou operador
+signal s_operador_in : std_logic_vector(1 downto 0);
+signal s_xIn : std_logic_vector(7 downto 0);
+signal s_enable_out : std_logic;
+signal s_action : std_logic_vector(2 downto 0);
+signal s_operador_out : std_logic_vector(1 downto 0);
+signal s_xOut : std_logic_vector(7 downto 0);
+signal s_enable_ram : std_logic;
+
+
+--ram
+signal r_action2 : std_logic_vector(2 downto 0); -- 000 push ; 001 delete ; 010 swap ; 011 clear ; 100 result
+signal r_writeData : std_logic_vector(7 downto 0);
+signal r_resultado_in : std_logic_vector(7 downto 0);
+signal r_readAdress : std_logic_vector(1 downto 0);
+signal r_number1_out : std_logic_vector(7 downto 0);
+signal r_number2_out : std_logic_vector(7 downto 0);
+signal r_readData : std_logic_vector(7 downto 0);
+signal r_enable : std_logic;
+
+--Operation
+signal o_number1 : std_logic_vector(7 downto 0);
+signal o_number2 : std_logic_vector(7 downto 0);
+signal o_operador : std_logic_vector(1 downto 0);
+signal o_enable : std_logic;
+signal o_result : std_logic_vector(7 downto 0));
+
+--action
+signal a_action_in : std_logic_vector(2 downto 0);
+signal a_delete : std_logic;
+signal a_swap : std_logic;
+signal a_clear : std_logic;
+signal a_action_out : std_logic_vector(2 downto 0);
+
+--Operator
+signal op_dataIn : std_logic;
+signal op_dataOut : std_logic_vector(1 downto 0);
+
+
+
+begin
+
+seqdetfsm : entity work.SeqDetFSM(Behavioral)
+		port map(enter => s_enter,
+				  numero_operador => s_numero_operador,
+				  operador_in => op_dataOut,
+				  xIn => s_xIn,
+				  enable_out => s_enable_out,
+				  enable_ram => s_enable_ram,
+				  action => s_action,
+				  operador_out => s_operador_out,
+				  xOut => s_xOut);
+				  
+ram : entity work.RAM2_8(Behavioral)
+		port map(action => a_action_out,
+					writeData => s_xOut,
+					resultado_in => r_resultado_in,
+					readAdress => r_readAdress,
+					number1_out => r_number1_out,
+					number2_out => r_number2_out,
+					readData => r_readData,
+					enable => s_enable_ram);
+					
+operation : entity work.Operation(Behavioral)
+		port map(number1 => r_number1_out,
+					number2 => r_number2_out,
+					operador => s_operador_out,
+					enable => s_enable_out,
+					result => r_resultado_in);
+
+action : entity work.action(Behavioral)
+		port map(action_in => s_action,
+					delete => a_delete,
+					swap => a_swap,
+					clear => a_clear,
+					action_out => a_action_out);
+					
+operator : entity work.action(Behavioral)
+		port map(dataIn => op_dataIn,
+					dataOut => op_dataOut);
+					
+
+
+				  
+stim_proc : process
+begin
+op_dataIn <= "00";
+s_delete <= '0';
+a_swap <= '0';
+a_clear <= '0';
+	
+

@@ -1,0 +1,74 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity fase1_vhdl is
+	port(operator, enter, numero_operador, delete, swap, clear : in std_logic;
+		  xIn : in std_logic_Vector(7 downto 0);
+		  readAdress : in std_logic;
+		  readData : out std_logic_vector(7 downto 0));
+end fase1_vhdl;
+
+architecture Behavioral of fase1_vhdl is
+	
+	signal s_operator : std_logic;
+	signal s_enable_operation : std_logic;
+	signal s_enable_ram : std_logic;
+	signal s_action : std_logic;
+	signal s_operador_out : std_logic;
+	signal s_xOut : std_logic;
+	signal s_action2 : std_logic;
+	signal s_number1 : std_logic;
+	signal s_number2 : std_logic;
+	signal s_result : std_logic;
+	
+maquina_estados : entity work.SeqDetFSM(MealyArch)
+			port map(enter => enter;
+						numero_operador => numero_operador;
+						operador_in => s_operator;
+						xIn => xIn;
+						enable_out => s_enable_operation;
+						enable_ram => s_enable_ram;
+						action => s_action;
+						operador_out => s_operador_out;
+						xOut => s_xOut);
+						
+operator : entity work.Operator(Behavioral)
+			port map(dataIn => operator;
+						dataOut => s_operador_out);
+						
+
+action : entity work.action(Behavioral)
+			port map(action_in => s_action;
+						delete => delete;
+						swap => swap;
+						clear => clear;
+						action_out => s_action2);
+						
+ram : entity work.RAM2_8(Behavioral)
+			port map(enable => s_enable_ram;
+						action => s_action2;
+						writeData => s_xOut;
+						resultado_in => s_result;
+						readAdress => readAdress;
+						number1_out => s_number1;
+						number2_out => s_number2;
+						readData => readData);
+						
+operation : entity work.Operation(Behavioral)
+			port map(number1 => s_number1;
+						number2 => s_number2;
+						operador => s_operator;
+						enable => s_enable_operation;
+						result => s_result);
+						
+
+			
+			
+
+			
+			
+			
+			
+			
+			

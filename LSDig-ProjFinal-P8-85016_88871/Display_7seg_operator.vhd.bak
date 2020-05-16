@@ -1,0 +1,82 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity Display_7seg_operator is
+	port(dataIn : in std_logic_Vector(2 downto 0);
+		  display1, display2, display3, display4 : out std_logic_vector(6 downto 0));
+end Display_7seg_operator;
+
+architecture Behavioral of Display_7seg_operator is
+
+signal s_display1, s_display2, s_display3, s_display4 : std_logic_vector(3 downto 0) := "1111";
+
+begin
+
+process(dataIn)
+begin
+	-- 1 A 2 C
+	-- 3 D 4 E
+	-- 5 L 6 P
+	-- 7 S 8 W
+	-- 9 + 10 -
+	-- 11 * 12 /
+if(dataIN = "000") then
+	s_display1 <= "1001";
+	s_display2 <= "1111";
+	s_display3 <= "1111";
+	s_display4 <= "1111";
+elsif(dataIn = "001") then
+	s_display1 <= "1010";
+	s_display2 <= "1111";
+	s_display3 <= "1111";
+	s_display4 <= "1111";
+elsif(dataIn = "010") then
+	s_display1 <= "1011";
+	s_display2 <= "1111";
+	s_display3 <= "1111";
+	s_display4 <= "1111";
+elsif(dataIn = "011") then
+	s_display1 <= "1100";
+	s_display2 <= "1111";
+	s_display3 <= "1111";
+	s_display4 <= "1111";
+elsif(dataIn = "100") then
+	s_display1 <= "0101";
+	s_display2 <= "0100";
+	s_display3 <= "0010";
+	s_display4 <= "1111";
+elsif(dataIn = "101") then
+	s_display1 <= "0110";
+	s_display2 <= "0001";
+	s_display3 <= "1000";
+	s_display4 <= "0111";
+elsif(dataIn = "110") then
+	s_display1 <= "0100";
+	s_display2 <= "0101";
+	s_display3 <= "0010";
+	s_display4 <= "1111";
+else
+	s_display1 <= "1111";
+	s_display2 <= "1111";
+	s_display3 <= "1111";
+	s_display4 <= "1111";
+end if;
+end process;
+
+seg7bin1 : entity work.Bin7SegDecoder(Behavioral)
+			port map(binInput => s_display1,
+				decOut_n => display1);
+
+seg7bin2 : entity work.Bin7SegDecoder(Behavioral)
+			port map(binInput => s_display2,
+				decOut_n => display2);
+				
+seg7bin3 : entity work.Bin7SegDecoder(Behavioral)
+			port map(binInput => s_display3,
+				decOut_n => display3);
+				
+seg7bin4 : entity work.Bin7SegDecoder(Behavioral)
+			port map(binInput => s_display4,
+				decOut_n => display4);
+end Behavioral;

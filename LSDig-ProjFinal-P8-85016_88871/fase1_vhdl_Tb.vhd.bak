@@ -1,0 +1,30 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
+entity fase1_vhdl_Tb is
+end fase1_vhdl_Tb;
+
+architecture TestBench of fase1_vhdl_Tb is
+	signal enter, numero_operador, delete, swap, clear : std_logic;
+	signal operator_in : std_logic;
+	signal xIn : std_logic_Vector(7 downto 0);
+	signal readAdress : std_logic_vector(1 downto 0);
+	signal readData : std_logic_vector(7 downto 0));
+	
+begin 
+
+	uut : entity work.fase1_vhdl(Structural)
+			port map(enter => enter,
+						numero_operador => numero_operador,
+						delete => delete,
+						swap => swap,
+						clear => clear,
+						operator_in => operator_in,
+						xIn => xIn,
+						readAdress => readAdress,
+						readData => readData);
+						
+	stim_proc : process
+	
+	

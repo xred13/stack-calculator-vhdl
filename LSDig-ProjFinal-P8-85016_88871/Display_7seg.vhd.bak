@@ -1,0 +1,37 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity Display_7seg is
+	port(dataIn : in std_logic_Vector(7 downto 0);
+		  seg7_number1, seg7_number2, seg7_number3 : out std_logic_vector(6 downto 0));
+end Display_7seg;
+
+architecture Behavioral of Display_7seg is
+
+	signal s_number1, s_number2, s_number3, s_dataIn : integer;
+	signal number1, number2, number3 : std_logic_vector(3 downto 0);
+begin
+
+s_dataIn <= to_integer(unsigned(dataIn));
+
+s_number1 <= s_dataIn rem 10;
+s_number2 <= (s_dataIn rem 100) - s_number1;
+s_number3 <= s_dataIn - (s_number1 + s_number2);
+
+number1 <= std_logic_vector(to_unsigned(s_number1, 4));
+number2 <= std_logic_vector(to_unsigned(s_number2, 4));
+number3 <= std_logic_Vector(to_unsigned(s_number3, 4));
+
+seg7bin1 : entity work.Bin7SegDecoder(Behavioral)
+			port map(binInput => number1,
+				decOut_n => seg7_number1);
+
+seg7bin2 : entity work.Bin7SegDecoder(Behavioral)
+			port map(binInput => number1,
+				decOut_n => seg7_number2);
+				
+seg7bin3 : entity work.Bin7SegDecoder(Behavioral)
+			port map(binInput => number1,
+				decOut_n => seg7_number3);
+end Behavioral;

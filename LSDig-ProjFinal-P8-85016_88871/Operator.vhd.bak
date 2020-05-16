@@ -1,0 +1,42 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity Operator is
+	port(dataIn : in std_logic;
+		  dataOut : out std_logic_vector(2 downto 0));
+end Operator;
+
+architecture Behavioral of Operator is
+
+	signal operador : integer range 0 to 5;
+
+
+begin
+proc : process(dataIn)
+begin
+		 
+	if(rising_edge(dataIn)){
+		if(operador == 5) then
+			operador <= 0;
+		else
+			operador <= operador +1;
+		end if;
+	end if;
+
+end process;
+
+dataOut <= "000" when operador == 0 else -- +
+			  "001" when operador == 1 else -- -
+			  "010" when operador == 2 else -- *
+			  "011" when operador == 3 else -- /
+			  "100" when operador == 4 else -- DEL
+			  "101"; -- SWAP
+			  
+end Behavioral;
+
+
+
+		
+			
+		 
